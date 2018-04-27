@@ -1,0 +1,49 @@
+<!-- index.html -->
+{% extends 'base.html' %}
+{% block title %} 欢迎光临我的博客 {% endblock %}
+{% block headmessage %} 
+    <h3 style='font-family:楷体;'>本站文章列表</a>
+{% endblock %}
+{% block content %} 
+    {% for post in contacts %}
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <p style='font-family:微软雅黑;font-size:14pt;font-weight:bold;'>
+                    <a href='/post/{{post.id}}'>{{ post.title }}</a>
+                </p>
+            </div>
+            <div class='panel-body' style='background-color:#ffffdd'>
+                <p>
+                   {{ post.body | truncatechars:63 }}
+                </p>
+            </div>
+            <div class='panel-footer'  style='background-color:#efefef'>
+                <p>
+                    发布时间：{{ post.pub_date | date:"Y M d, h:m:s"}}
+                </p>
+            </div>
+        </div>
+    {% endfor %}
+    {# 分页标签的HTML代码 #}
+    {% if contacts.has_other_pages %}
+      <ul class="pagination">
+        {% if contacts.has_previous %}
+          <li><a href="?page={{ contacts.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+          <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in contacts.paginator.page_range %}
+          {% if contacts.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+          {% elif i > contacts.number|add:'-8' and i < contacts.number|add:'8' %}
+          <li><a href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if contacts.has_next %}
+          <li><a href="?page={{ contacts.next_page_number }}">&raquo;</a></li>
+        {% else %}
+          <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+{% endblock %}
